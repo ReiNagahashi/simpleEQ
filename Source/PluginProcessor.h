@@ -13,6 +13,16 @@
 //==============================================================================
 /**
 */
+
+struct ChainSettings
+{
+    float peakFreq{0}, peakGainInDecibels{0}, peakQuality{1.f};
+    float lowCutFreq {0}, highCutFreq {0};
+    int lowCutSlope {0}, highCutSlope {0};
+};
+
+ChainSettings getChainSetting(juce::AudioProcessorValueTreeState& apvts);
+
 class SimpleEQAudioProcessor  : public juce::AudioProcessor
                             #if JucePlugin_Enable_ARA
                              , public juce::AudioProcessorARAExtension
@@ -64,6 +74,14 @@ private:
     using Filter = juce::dsp::IIR::Filter<float>;
     using CutFilter = juce::dsp::ProcessorChain<Filter, Filter, Filter, Filter>;
     using MonoChain = juce::dsp::ProcessorChain<CutFilter, Filter, CutFilter>;
+    
+    enum ChainPositions
+    {
+        LowCut,
+        Peak,
+        HighCut
+        
+    };
     
     MonoChain leftChain, rightChain;
     //==============================================================================
